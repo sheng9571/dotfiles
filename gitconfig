@@ -1,0 +1,70 @@
+[user]
+	name = sheng
+	email = sheng9571@gmail.com
+[color]
+	ui = auto
+[color "branch"]
+	current = yellow bold
+	local = green bold
+	remote = cyan bold
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = red bold
+[alias]
+	# git add
+	a = add --all
+
+	# git branch
+	b = branch
+	bd = branch -d
+	
+
+	# git commit
+	c = commit
+	cm = commit -m
+	ca = commit --amend
+
+	
+	# git checkout
+	ch = checkout
+	chb = checkout -b
+
+	# git log
+	lg = log --color --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+
+	# merge
+	m = merge
+	mnf = merge --no-ff
+
+	# git reflog
+	rlg = reflog --color
+
+
+	# git push
+	pom = push origin master
+
+	# rev-parse
+	rp = rev-parse
+
+	# reset
+	rh = reset --hard
+	rs = reset --soft
+
+	# rebase
+	rb = rebase
+
+	# revert
+	rv = revert
+	rvn = revert -n
+	rva = revert --abort
+	rvc = revert --continue
+
+	# git status
+	s = status

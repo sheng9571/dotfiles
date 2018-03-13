@@ -1,0 +1,8 @@
+# for bash
+# ex: in history: vim file.py
+# we press vim fi, then press "Up" button, it will search history, automatically complete vim file.py
+set match-hidden-files off
+set show-all-if-ambiguous on
+set completion-ignore-case on
+"\e[A": history-search-backward
+"\e[B": history-search-forward
