@@ -129,7 +129,7 @@ alias cls='clear'
 
 alias tgz='tar -zxvf'
 
-alias ifc='ifconfig'
+alias ifc='/sbin/ifconfig'
 
 alias py=python
 # alias -s jar='java -jar'
