@@ -97,7 +97,7 @@ then
 	alias grep='grep --color'
 else
 	# BSD (MAC) Style
-    alias ls='ls -G'
+	alias ls='ls -G'
 	alias ll='ls -ahlF'
 	alias p='ps aT -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args"'
 	alias pp='ps T -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args" -p'
