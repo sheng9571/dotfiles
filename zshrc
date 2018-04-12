@@ -81,13 +81,28 @@ export LSCOLORS='gxfxcxdxbxGxDxabagacad'
 # Define colors for the completion system.
 export LS_COLORS='di=36:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+# 
+# # Set up aliases
 if ls --color -d . &>/dev/null 2>&1
 then
     # Linux Style
-    alias ls='ls --color=tty'
+    # alias ls='ls --color=tty'
+	alias ls='ls -G --color=tty'
+	alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
+	alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
+	alias pp='ps T -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args" -p'
+	alias df='df -hT'
+	alias free='free -h'
+	alias grep='grep --color'
 else
-    # BSD Style
+	# BSD (MAC) Style
     alias ls='ls -G'
+	alias ll='ls -ahlF'
+	alias p='ps aT -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args"'
+	alias pp='ps T -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args" -p'
+	alias df='df -h'
+	alias grep='grep --color=always'
 fi
 
 
@@ -103,18 +118,7 @@ setopt HIST_IGNORE_DUPS
 limit coredumpsize 0
 
 
-# 
-# # Set up aliases
-# alias ls='ls -G --color=tty'
-alias ls='ls --color=tty'
-alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
-
-alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
-alias pp='ps T -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args" -p'
-
-alias df='df -hT'
-alias free='free -h'
-
+# common command 
 alias shutdown='shutdown -h now'
 alias reboot='shutdown -r now'
 
@@ -134,7 +138,6 @@ alias ifc='/sbin/ifconfig'
 alias py=python
 # alias -s jar='java -jar'
  
-alias grep='grep --color'
 
 # alias git_current_branch='git rev-parse --abbrev-ref HEAD'
 # alias g='git'
