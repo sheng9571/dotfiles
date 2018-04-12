@@ -86,8 +86,8 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 # # Set up aliases
 if ls --color -d . &>/dev/null 2>&1
 then
-    # Linux Style
-    # alias ls='ls --color=tty'
+	# Linux Style
+	# alias ls='ls --color=tty'
 	alias ls='ls -G --color=tty'
 	alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
 	alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
