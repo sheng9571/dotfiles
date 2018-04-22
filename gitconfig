@@ -69,4 +69,4 @@
 	# git status
 	s = status
 [core]
-	excludesfile = /home/sheng/.gitignore
+	excludesfile = ~/.gitignore
