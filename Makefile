@@ -7,8 +7,6 @@ install:
 	ln -fs `pwd`/inputrc	"${HOME}/.inputrc"
 	ln -fs `pwd`/vimrc	"${HOME}/.vimrc"
 	ln -fs `pwd`/vim	"${HOME}/.vim"
-	# add gitignore file to global config
-	git config --global core.excludesfile ~/.gitignore
 
 clean:
 	rm -rf ${HOME}/.zshrc ${HOME}/.tmux.conf ${HOME}/.gitconfig ${HOME}/.gitignore ${HOME}/.bashrc ${HOME}/.inputrc ${HOME}/.vimrc ${HOME}/.vim
