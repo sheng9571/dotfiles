@@ -15,7 +15,7 @@ function +vi-git_status {
 zstyle ':vcs_info:*' enable bzr git hg svn
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '%F{green}✔%f'
-zstyle ':vcs_info:*' unstagedstr '%F{yellow}❗%f'
+zstyle ':vcs_info:*' unstagedstr '%F{yellow}!f'
 zstyle ':vcs_info:*' formats '  %b%c%u'
 zstyle ':vcs_info:*' actionformats " - [%b%c%u|%F{cyan}%a%f]"
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b|%F{cyan}%r%f'
@@ -66,11 +66,41 @@ fi
 # sell color: user@server:path
 
 
+:'
+# Recognize OS
+if [ `uname` = "Linux" ]; then
+	str="$(uname -a)"
+	substr="raspberry"
+	if test "${str#*$substr}" != "$str"
+	then
+		# raspberry
+		echo "raspberry pi"
+	else
+		# Other linux distribution
+		echo "Ubuntu or other distribution"
+	fi
+elif [ `uname` = "freebsd" ]; then
+	# FreeBSD
+	echo "FreeBSD"
+elif [ `uname` = "Darwin" ]; then
+	# Mac OS
+	echo "Darwin"
+fi
+'
 
 # Language
-export LANGUAGE="en_US.UTF-8"
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+str="$(uname -a)"
+substr="raspberry"
+if test "${str#*$substr}" != "$str"
+then
+	# raspberry
+	# raspberry does not support LANGUAGE config settings
+else
+	# Other linux distribution
+	export LANGUAGE="en_US.UTF-8"
+	export LANG="en_US.UTF-8"
+	export LC_ALL="en_US.UTF-8"
+fi
 
 
 # Colors

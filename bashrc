@@ -125,8 +125,17 @@ if ! shopt -oq posix; then
 fi
 
 # Setting Language
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+str="$(uname -a)"
+substr="raspberry"
+if test "${str#*$substr}" != "$str"
+then
+	# raspberry
+	# raspberry does not support LANG config
+else
+	# Other linux distribution
+	export LANG="en_US.UTF-8"
+	export LC_ALL="en_US.UTF-8"
+fi
 
 # Setting editor to vim
 export EDITOR=vim
