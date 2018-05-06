@@ -131,6 +131,8 @@ if test "${str#*$substr}" != "$str"
 then
 	# raspberry
 	# raspberry does not support LANG config
+	# use true command to represent "do nothing" command
+	true
 else
 	# Other linux distribution
 	export LANG="en_US.UTF-8"
