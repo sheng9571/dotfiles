@@ -165,6 +165,50 @@ alias ifc='/sbin/ifconfig'
 
 alias py=python
 # alias -s jar='java -jar'
+
+# priority to use ncat then nc
+file="$(which /usr/bin/ncat)"
+if [ ! -e "$file" ]
+then
+
+	# try to find nc.traditional is exist or not
+	file="/bin/nc.traditional"
+	if [ ! -e "$file" ]
+	then
+		# server, tcp, ipv4
+		alias ncs='nc -l4kvnp 9453'
+		# server, udp, ipv4
+		alias ncsu='nc -l4vnup 9453'
+
+		# client, tcp, ipv4
+		alias ncc='nc -4'
+		# client, udp, ipv4
+		alias nccu='nc -4u'
+	else
+		# has -e parameter
+		# server, tcp, ipv4
+		alias ncs='/bin/nc.traditional -lkvnp 9453'
+		# server, udp, ipv4
+		alias ncsu='/bin/nc.traditional -lvnup 9453'
+
+		# client, tcp, ipv4, reverse shell
+		alias ncc='/bin/nc.traditional -e /bin/sh'
+		# client, udp, ipv4
+		alias nccu='/bin/nc.traditional -u'
+	fi
+
+else
+	# server, tcp, ipv4, ssl
+	alias ncs='ncat -l4kvnp 9453 --ssl'
+	# server, udp, ipv4
+	alias ncsu='ncat -l4vnup 9453'
+
+	# client, tcp, ipv4, ssl, reverse shell
+	alias ncc='ncat -4 --ssl -e /bin/sh'
+	# client, udp, ipv4
+	alias nccu='ncat -4u'
+fi
+
  
 
 # alias git_current_branch='git rev-parse --abbrev-ref HEAD'
