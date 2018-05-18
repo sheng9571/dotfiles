@@ -7,6 +7,7 @@ install:
 	ln -fs `pwd`/inputrc	"${HOME}/.inputrc"
 	ln -fs `pwd`/vimrc	"${HOME}/.vimrc"
 	ln -fs `pwd`/vim	"${HOME}/.vim"
+	ln -fs `pwd`/gdbinit	"${HOME}/.gdbinit"
 
 clean:
-	rm -rf ${HOME}/.zshrc ${HOME}/.tmux.conf ${HOME}/.gitconfig ${HOME}/.gitignore ${HOME}/.bashrc ${HOME}/.inputrc ${HOME}/.vimrc ${HOME}/.vim
+	rm -rf ${HOME}/.zshrc ${HOME}/.tmux.conf ${HOME}/.gitconfig ${HOME}/.gitignore ${HOME}/.bashrc ${HOME}/.inputrc ${HOME}/.vimrc ${HOME}/.vim ${HOME}/.gdbinit
