@@ -184,6 +184,9 @@ alias py=python
 
 alias grep='grep --color'
 
+alias gdb='gdb -q'
+alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
+
 # priority to use ncat then nc
 file="$(which /usr/bin/ncat)"
 if [ ! -e "$file" ]
