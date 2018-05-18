@@ -184,6 +184,7 @@ alias py=python
 
 alias grep='grep --color'
 
+# wget -O ~/.dotfiles/gdb/gef.py -q https://github.com/hugsy/gef/raw/master/gef.py
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 

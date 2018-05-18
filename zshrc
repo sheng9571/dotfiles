@@ -166,6 +166,7 @@ alias ifc='/sbin/ifconfig'
 alias py=python
 # alias -s jar='java -jar'
 
+# wget -O ~/.dotfiles/gdb/gef.py -q https://github.com/hugsy/gef/raw/master/gef.py
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 
