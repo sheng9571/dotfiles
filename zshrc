@@ -251,7 +251,14 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 #開啟補齊select顏色
 zstyle ':completion:*:*:*:*:*' menu select
 
-#Docker
+
+# Docker
 function dk(){
     docker exec -it $1 zsh
 }
+
+# GDB attach bug
+function gdbattach() {
+	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+}
+# 

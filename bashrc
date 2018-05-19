@@ -231,7 +231,14 @@ else
 	alias nccu='ncat -4u'
 fi
 
+
 # Docker
 function dk(){
 	docker exec -it $1 zsh
+}
+
+
+# GDB attach bug
+function gdbattach() {
+	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 }
