@@ -114,4 +114,18 @@ function SwitchMouseMode()
 		echo "Mouse is enabled."
 	endif
 endfunction
+
+
+" paste mode
+map <F3> :call SwitchPasteMode()<CR>
+map! <F3> :call SwitchPasteMode()<CR>
+function SwitchPasteMode()
+	if (&paste == 1)
+		let &paste = 0
+		echo "Paste Mode is disabled."
+	else
+		let &paste = 1
+		echo "Paste Mode is enabled."
+	endif
+endfunction
 "#######################################################
