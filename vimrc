@@ -23,6 +23,8 @@ set background=dark
 " Set Tab
 set tabstop=4
 set shiftwidth=4
+set noexpandtab
+set expandtab
 
 " row, column place
 set ruler
@@ -58,6 +60,8 @@ nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 " increment search
 set incsearch
 
+"Backspace key won't move from current line
+set backspace=indent,eol,start
 
 let g:airline_theme='onedark'
 
