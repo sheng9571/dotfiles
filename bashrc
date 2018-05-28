@@ -60,9 +60,25 @@ if [ "$color_prompt" = yes ]; then
 
 	# sell color: user@server:path
 	if [ `id -u` = 0 ]; then
-		PS1='${debian_chroot:+($debian_chroot)}\[\033[01;91m\]\u\[\033[01;90m\]@\[\033[01;91m\]\h\[\033[90m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+        
+        if [ "$(uname)" == "Darwin" ]; then
+            # Mac OS
+		    PS1='${debian_chroot:+($debian_chroot)}\[\033[31m\]\u\[\033[33m\]@\[\033[31m\]\h\[\033[00m\]:\[\033[34m\]\w\[\033[00m\]\$ '
+        else
+            # Linux
+		    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;91m\]\u\[\033[01;90m\]@\[\033[01;91m\]\h\[\033[90m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+        fi
+
 	else
-		PS1='${debian_chroot:+($debian_chroot)}\[\033[01;92m\]\u\[\033[01;90m\]@\[\033[01;92m\]\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
+
+        if [ "$(uname)" == "Darwin" ]; then
+            # Mac OS
+		    PS1='${debian_chroot:+($debian_chroot)}\[\033[32m\]\u\[\033[36m\]@\[\033[32m\]\h\[\033[00m\]:\[\033[35m\]\w\[\033[00m\]\$ '
+        else
+            # Linux
+		    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;92m\]\u\[\033[01;90m\]@\[\033[01;92m\]\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
+        fi
+
 	fi
 	# sell color: user@server:path
 
@@ -96,9 +112,9 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# alias ll='ls -alF'
+# alias la='ls -A'
+# alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -151,15 +167,29 @@ else
 	export LS_COLORS='di=36:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
 fi
 
-# Set up alias
-# alias ls='ls -G --color=tty
-alias ls='ls --color=tty'
 
-alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
-alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
-alias pp='ps T -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args" -p'
+# # Set up aliases
+if ls --color -d . &>/dev/null 2>&1
+then
+	# Linux Style
+	# alias ls='ls --color=tty'
+	alias ls='ls -G --color=tty'
+	alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
+	alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
+	alias pp='ps T -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args" -p'
+	alias df='df -hT'
+	alias free='free -h'
+	alias grep='grep --color'
+else
+	# BSD (MAC) Style
+	alias ls='ls -G'
+	alias ll='ls -ahlF'
+	alias p='ps aT -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args"'
+	alias pp='ps T -o "user=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,command=args" -p'
+	alias df='df -h'
+	alias grep='grep --color=always'
+fi
 
-alias df='df -hT'
 alias free='free -h'
 
 alias shutdown='shutdown -h now'
@@ -188,47 +218,195 @@ alias grep='grep --color'
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 
-# priority to use ncat then nc
-file="$(which /usr/bin/ncat)"
-if [ ! -e "$file" ]
-then
 
-	# try to find nc.traditional is exist or not
-	file="/bin/nc.traditional"
-	if [ ! -e "$file" ]
-	then
-		# server, tcp, ipv4
-		alias ncs='nc -l4kvnp 9453'
-		# server, udp, ipv4
-		alias ncsu='nc -l4vnup 9453'
+# others alias on different os
+if [ `uname` = "Linux" ]; then
+ 	str="$(uname -a)"
+ 	substr="raspberry"
+ 	if test "${str#*$substr}" != "$str"
+ 	then
+ 		# raspberry
+     
+        # ---------- nc ----------
+        # priority to use ncat then nc
+        file="$(which /usr/bin/ncat)"
+        if [ ! -e "$file" ]
+        then
 
-		# client, tcp, ipv4
-		alias ncc='nc -4'
-		# client, udp, ipv4
-		alias nccu='nc -4u'
-	else
-		# has -e parameter
-		# server, tcp, ipv4
-		alias ncs='/bin/nc.traditional -lkvnp 9453'
-		# server, udp, ipv4
-		alias ncsu='/bin/nc.traditional -lvnup 9453'
+            # try to find nc.traditional is exist or not
+            file="/bin/nc.traditional"
+            if [ ! -e "$file" ]
+            then
+                # server, tcp, ipv4
+                alias ncs='nc -l4kvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='nc -l4vnup 9453'
 
-		# client, tcp, ipv4, reverse shell
-		alias ncc='/bin/nc.traditional -e /bin/sh'
-		# client, udp, ipv4
-		alias nccu='/bin/nc.traditional -u'
-	fi
+                # client, tcp, ipv4
+                alias ncc='nc -4'
+                # client, udp, ipv4
+                alias nccu='nc -4u'
+            else
+                # has -e parameter
+                # server, tcp, ipv4
+                alias ncs='/bin/nc.traditional -lkvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='/bin/nc.traditional -lvnup 9453'
 
-else
-	# server, tcp, ipv4, ssl
-	alias ncs='ncat -l4kvnp 9453 --ssl'
-	# server, udp, ipv4
-	alias ncsu='ncat -l4vnup 9453'
+                # client, tcp, ipv4, reverse shell
+                alias ncc='/bin/nc.traditional -e /bin/sh'
+                # client, udp, ipv4
+                alias nccu='/bin/nc.traditional -u'
+            fi
 
-	# client, tcp, ipv4, ssl, reverse shell
-	alias ncc='ncat -4 --ssl -e /bin/sh'
-	# client, udp, ipv4
-	alias nccu='ncat -4u'
+        else
+            # server, tcp, ipv4, ssl
+            alias ncs='ncat -l4kvnp 9453 --ssl'
+            # server, udp, ipv4
+            alias ncsu='ncat -l4vnup 9453'
+
+            # client, tcp, ipv4, ssl, reverse shell
+            alias ncc='ncat -4 --ssl -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='ncat -4u'
+        fi
+        # ---------- nc ----------
+
+
+ 	else
+ 		# Other linux distribution
+
+        # ---------- nc ----------
+        # priority to use ncat then nc
+        file="$(which /usr/bin/ncat)"
+        if [ ! -e "$file" ]
+        then
+
+            # try to find nc.traditional is exist or not
+            file="/bin/nc.traditional"
+            if [ ! -e "$file" ]
+            then
+                # server, tcp, ipv4
+                alias ncs='nc -l4kvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='nc -l4vnup 9453'
+
+                # client, tcp, ipv4
+                alias ncc='nc -4'
+                # client, udp, ipv4
+                alias nccu='nc -4u'
+            else
+                # has -e parameter
+                # server, tcp, ipv4
+                alias ncs='/bin/nc.traditional -lkvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='/bin/nc.traditional -lvnup 9453'
+
+                # client, tcp, ipv4, reverse shell
+                alias ncc='/bin/nc.traditional -e /bin/sh'
+                # client, udp, ipv4
+                alias nccu='/bin/nc.traditional -u'
+            fi
+
+        else
+            # server, tcp, ipv4, ssl
+            alias ncs='ncat -l4kvnp 9453 --ssl'
+            # server, udp, ipv4
+            alias ncsu='ncat -l4vnup 9453'
+
+            # client, tcp, ipv4, ssl, reverse shell
+            alias ncc='ncat -4 --ssl -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='ncat -4u'
+        fi
+        # ---------- nc ----------
+
+ 	fi
+elif [ `uname` = "freebsd" ]; then
+ 	# FreeBSD
+
+
+    # ---------- nc ----------
+    # priority to use ncat then nc
+    file="$(which /usr/bin/ncat)"
+    if [ ! -e "$file" ]
+    then
+
+        # try to find nc.traditional is exist or not
+        file="/bin/nc.traditional"
+        if [ ! -e "$file" ]
+        then
+            # server, tcp, ipv4
+            alias ncs='nc -l4kvnp 9453'
+            # server, udp, ipv4
+            alias ncsu='nc -l4vnup 9453'
+
+            # client, tcp, ipv4
+            alias ncc='nc -4'
+            # client, udp, ipv4
+            alias nccu='nc -4u'
+        else
+            # has -e parameter
+            # server, tcp, ipv4
+            alias ncs='/bin/nc.traditional -lkvnp 9453'
+            # server, udp, ipv4
+            alias ncsu='/bin/nc.traditional -lvnup 9453'
+
+            # client, tcp, ipv4, reverse shell
+            alias ncc='/bin/nc.traditional -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='/bin/nc.traditional -u'
+        fi
+
+    else
+        # server, tcp, ipv4, ssl
+        alias ncs='ncat -l4kvnp 9453 --ssl'
+        # server, udp, ipv4
+        alias ncsu='ncat -l4vnup 9453'
+
+        # client, tcp, ipv4, ssl, reverse shell
+        alias ncc='ncat -4 --ssl -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='ncat -4u'
+    fi
+    # ---------- nc ----------
+
+
+elif [ `uname` = "Darwin" ]; then
+	# Mac OS
+
+
+    # ---------- nc ----------
+    # priority to use ncat then nc
+    file="$(which /usr/local/bin/ncat)"
+    if [ ! -e "$file" ]
+    then
+        # mac os built-in nc has -e parameter
+
+        # server, tcp
+        alias ncs='/usr/local/bin/nc -lvnp 9453'
+        # server, udp
+        alias ncsu='/usr/local/bin/nc -lvnup 9453'
+
+        # client, tcp, ipv4, reverse shell
+        alias ncc='/usr/local/bin/nc -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='/usr/local/bin/nc -u'
+
+    else
+        # server, tcp, ipv4, ssl
+        alias ncs='ncat -l4kvnp 9453 --ssl'
+        # server, udp, ipv4
+        alias ncsu='ncat -l4vnup 9453'
+
+        # client, tcp, ipv4, ssl, reverse shell
+        alias ncc='ncat -4 --ssl -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='ncat -4u'
+    fi
+    # ---------- nc ----------
+
+
 fi
 
 

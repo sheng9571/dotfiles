@@ -170,50 +170,197 @@ alias py=python
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 
-# priority to use ncat then nc
-file="$(which /usr/bin/ncat)"
-if [ ! -e "$file" ]
-then
 
-	# try to find nc.traditional is exist or not
-	file="/bin/nc.traditional"
-	if [ ! -e "$file" ]
-	then
-		# server, tcp, ipv4
-		alias ncs='nc -l4kvnp 9453'
-		# server, udp, ipv4
-		alias ncsu='nc -l4vnup 9453'
+# others alias on different os
+if [ `uname` = "Linux" ]; then
+ 	str="$(uname -a)"
+ 	substr="raspberry"
+ 	if test "${str#*$substr}" != "$str"
+ 	then
+ 		# raspberry
+     
+        # ---------- nc ----------
+        # priority to use ncat then nc
+        file="$(which /usr/bin/ncat)"
+        if [ ! -e "$file" ]
+        then
 
-		# client, tcp, ipv4
-		alias ncc='nc -4'
-		# client, udp, ipv4
-		alias nccu='nc -4u'
-	else
-		# has -e parameter
-		# server, tcp, ipv4
-		alias ncs='/bin/nc.traditional -lkvnp 9453'
-		# server, udp, ipv4
-		alias ncsu='/bin/nc.traditional -lvnup 9453'
+            # try to find nc.traditional is exist or not
+            file="/bin/nc.traditional"
+            if [ ! -e "$file" ]
+            then
+                # server, tcp, ipv4
+                alias ncs='nc -l4kvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='nc -l4vnup 9453'
 
-		# client, tcp, ipv4, reverse shell
-		alias ncc='/bin/nc.traditional -e /bin/sh'
-		# client, udp, ipv4
-		alias nccu='/bin/nc.traditional -u'
-	fi
+                # client, tcp, ipv4
+                alias ncc='nc -4'
+                # client, udp, ipv4
+                alias nccu='nc -4u'
+            else
+                # has -e parameter
+                # server, tcp, ipv4
+                alias ncs='/bin/nc.traditional -lkvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='/bin/nc.traditional -lvnup 9453'
 
-else
-	# server, tcp, ipv4, ssl
-	alias ncs='ncat -l4kvnp 9453 --ssl'
-	# server, udp, ipv4
-	alias ncsu='ncat -l4vnup 9453'
+                # client, tcp, ipv4, reverse shell
+                alias ncc='/bin/nc.traditional -e /bin/sh'
+                # client, udp, ipv4
+                alias nccu='/bin/nc.traditional -u'
+            fi
 
-	# client, tcp, ipv4, ssl, reverse shell
-	alias ncc='ncat -4 --ssl -e /bin/sh'
-	# client, udp, ipv4
-	alias nccu='ncat -4u'
+        else
+            # server, tcp, ipv4, ssl
+            alias ncs='ncat -l4kvnp 9453 --ssl'
+            # server, udp, ipv4
+            alias ncsu='ncat -l4vnup 9453'
+
+            # client, tcp, ipv4, ssl, reverse shell
+            alias ncc='ncat -4 --ssl -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='ncat -4u'
+        fi
+        # ---------- nc ----------
+
+
+ 	else
+ 		# Other linux distribution
+
+        # ---------- nc ----------
+        # priority to use ncat then nc
+        file="$(which /usr/bin/ncat)"
+        if [ ! -e "$file" ]
+        then
+
+            # try to find nc.traditional is exist or not
+            file="/bin/nc.traditional"
+            if [ ! -e "$file" ]
+            then
+                # server, tcp, ipv4
+                alias ncs='nc -l4kvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='nc -l4vnup 9453'
+
+                # client, tcp, ipv4
+                alias ncc='nc -4'
+                # client, udp, ipv4
+                alias nccu='nc -4u'
+            else
+                # has -e parameter
+                # server, tcp, ipv4
+                alias ncs='/bin/nc.traditional -lkvnp 9453'
+                # server, udp, ipv4
+                alias ncsu='/bin/nc.traditional -lvnup 9453'
+
+                # client, tcp, ipv4, reverse shell
+                alias ncc='/bin/nc.traditional -e /bin/sh'
+                # client, udp, ipv4
+                alias nccu='/bin/nc.traditional -u'
+            fi
+
+        else
+            # server, tcp, ipv4, ssl
+            alias ncs='ncat -l4kvnp 9453 --ssl'
+            # server, udp, ipv4
+            alias ncsu='ncat -l4vnup 9453'
+
+            # client, tcp, ipv4, ssl, reverse shell
+            alias ncc='ncat -4 --ssl -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='ncat -4u'
+        fi
+        # ---------- nc ----------
+
+ 	fi
+elif [ `uname` = "freebsd" ]; then
+ 	# FreeBSD
+
+
+    # ---------- nc ----------
+    # priority to use ncat then nc
+    file="$(which /usr/bin/ncat)"
+    if [ ! -e "$file" ]
+    then
+
+        # try to find nc.traditional is exist or not
+        file="/bin/nc.traditional"
+        if [ ! -e "$file" ]
+        then
+            # server, tcp, ipv4
+            alias ncs='nc -l4kvnp 9453'
+            # server, udp, ipv4
+            alias ncsu='nc -l4vnup 9453'
+
+            # client, tcp, ipv4
+            alias ncc='nc -4'
+            # client, udp, ipv4
+            alias nccu='nc -4u'
+        else
+            # has -e parameter
+            # server, tcp, ipv4
+            alias ncs='/bin/nc.traditional -lkvnp 9453'
+            # server, udp, ipv4
+            alias ncsu='/bin/nc.traditional -lvnup 9453'
+
+            # client, tcp, ipv4, reverse shell
+            alias ncc='/bin/nc.traditional -e /bin/sh'
+            # client, udp, ipv4
+            alias nccu='/bin/nc.traditional -u'
+        fi
+
+    else
+        # server, tcp, ipv4, ssl
+        alias ncs='ncat -l4kvnp 9453 --ssl'
+        # server, udp, ipv4
+        alias ncsu='ncat -l4vnup 9453'
+
+        # client, tcp, ipv4, ssl, reverse shell
+        alias ncc='ncat -4 --ssl -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='ncat -4u'
+    fi
+    # ---------- nc ----------
+
+
+elif [ `uname` = "Darwin" ]; then
+	# Mac OS
+
+
+    # ---------- nc ----------
+    # priority to use ncat then nc
+    file="$(which /usr/local/bin/ncat)"
+    if [ ! -e "$file" ]
+    then
+        # mac os built-in nc has -e parameter
+
+        # server, tcp
+        alias ncs='/usr/local/bin/nc -lvnp 9453'
+        # server, udp
+        alias ncsu='/usr/local/bin/nc -lvnup 9453'
+
+        # client, tcp, ipv4, reverse shell
+        alias ncc='/usr/local/bin/nc -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='/usr/local/bin/nc -u'
+
+    else
+        # server, tcp, ipv4, ssl
+        alias ncs='ncat -l4kvnp 9453 --ssl'
+        # server, udp, ipv4
+        alias ncsu='ncat -l4vnup 9453'
+
+        # client, tcp, ipv4, ssl, reverse shell
+        alias ncc='ncat -4 --ssl -e /bin/sh'
+        # client, udp, ipv4
+        alias nccu='ncat -4u'
+    fi
+    # ---------- nc ----------
+
+
 fi
 
- 
 
 # alias git_current_branch='git rev-parse --abbrev-ref HEAD'
 # alias g='git'
@@ -261,4 +408,3 @@ function dk(){
 function gdbattach() {
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 }
-# 
