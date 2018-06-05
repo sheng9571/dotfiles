@@ -15,3 +15,9 @@ set prompt \001\033[1;31m\002[\033[01;31mgdb\033[01;31m\]\033[01;90m\> \001\033[
 
 # alias
 alias exit = quit
+
+# scripts
+python
+sys.path.insert(0, '/home/sheng/.dotfiles/gdb/scripts')
+import backtrace
+end
