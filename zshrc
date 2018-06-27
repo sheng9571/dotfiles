@@ -164,11 +164,16 @@ alias tgz='tar -zxvf'
 alias ifc='/sbin/ifconfig'
 
 alias py=python
+alias py3=python3
 # alias -s jar='java -jar'
 
 # wget -O ~/.dotfiles/gdb/gef.py -q https://github.com/hugsy/gef/raw/master/gef.py
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
+
+alias dkcu='docker-compose up -d'
+alias dkcd='docker-compose down'
+alias dkcl='docker-compose logs'
 
 
 # others alias on different os
@@ -403,6 +408,25 @@ zstyle ':completion:*:*:*:*:*' menu select
 function dk(){
     docker exec -it $1 zsh
 }
+
+
+# Docker stop and rm container
+function dksr() {
+    docker stop $1 && docker rm $1
+}
+
+
+# Docker rm image
+function dkri() {
+    docker image rm $1
+}
+
+
+# Get Docker image's IP
+function dkip() {
+    docker inspect $1 | grep "IPAddress"
+}
+
 
 # GDB attach bug
 function gdbattach() {
