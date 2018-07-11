@@ -218,6 +218,12 @@ alias grep='grep --color'
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 
+alias dkcu='docker-compose up -d'
+alias dkcd='docker-compose down'
+alias dkcl='docker-compose logs'
+
+alias xxd='xxd -u'
+alias hexdump='hexdump -vC'
 
 # others alias on different os
 if [ `uname` = "Linux" ]; then
@@ -273,6 +279,11 @@ if [ `uname` = "Linux" ]; then
         # ---------- nc ----------
 
 
+        # ---------- od ----------
+        alias od='od -tx1z -Ax -v'
+        # ---------- od ----------
+
+
  	else
  		# Other linux distribution
 
@@ -320,6 +331,11 @@ if [ `uname` = "Linux" ]; then
             alias nccu='ncat -4u'
         fi
         # ---------- nc ----------
+        
+        
+        # ---------- od ----------
+        alias od='od -tx1z -Ax -v'
+        # ---------- od ----------
 
  	fi
 elif [ `uname` = "freebsd" ]; then
@@ -370,6 +386,12 @@ elif [ `uname` = "freebsd" ]; then
         alias nccu='ncat -4u'
     fi
     # ---------- nc ----------
+        
+    
+    
+    # ---------- od ----------
+    alias od='od -tx1z -Ax -v'
+    # ---------- od ----------
 
 
 elif [ `uname` = "Darwin" ]; then
@@ -405,6 +427,11 @@ elif [ `uname` = "Darwin" ]; then
         alias nccu='ncat -4u'
     fi
     # ---------- nc ----------
+        
+    
+    # ---------- od ----------
+    alias od='od -tx1 -Ax -v'
+    # ---------- od ----------
 
 
 fi
@@ -413,6 +440,24 @@ fi
 # Docker
 function dk(){
 	docker exec -it $1 zsh
+}
+
+
+# Docker stop and rm container
+function dksr() {
+    docker stop $1 && docker rm $1
+}
+
+
+# Docker rm image
+function dkri() {
+    docker image rm $1
+}
+
+
+# Get Docker image's IP
+function dkip() {
+    docker inspect $1 | grep "IPAddress"
 }
 
 

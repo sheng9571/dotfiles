@@ -153,6 +153,7 @@ alias reboot='shutdown -r now'
 alias ip='curl ifconfig.co'
 
 alias dkpa='docker ps -a'
+alias dki='docker images'
 alias dkc='docker-compose'
 
 alias h=history
@@ -174,6 +175,10 @@ alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 alias dkcu='docker-compose up -d'
 alias dkcd='docker-compose down'
 alias dkcl='docker-compose logs'
+
+alias xxd='xxd -u'
+alias hexdump='hexdump -vC'
+
 
 
 # others alias on different os
@@ -228,6 +233,11 @@ if [ `uname` = "Linux" ]; then
             alias nccu='ncat -4u'
         fi
         # ---------- nc ----------
+        
+        
+        # ---------- od ----------
+        alias od='od -tx1z -Ax -v'
+        # ---------- od ----------
 
 
  	else
@@ -277,6 +287,11 @@ if [ `uname` = "Linux" ]; then
             alias nccu='ncat -4u'
         fi
         # ---------- nc ----------
+        
+        
+        # ---------- od ----------
+        alias od='od -tx1z -Ax -v'
+        # ---------- od ----------
 
  	fi
 elif [ `uname` = "freebsd" ]; then
@@ -327,6 +342,11 @@ elif [ `uname` = "freebsd" ]; then
         alias nccu='ncat -4u'
     fi
     # ---------- nc ----------
+        
+    
+    # ---------- od ----------
+    alias od='od -tx1z -Ax -v'
+    # ---------- od ----------
 
 
 elif [ `uname` = "Darwin" ]; then
@@ -362,6 +382,11 @@ elif [ `uname` = "Darwin" ]; then
         alias nccu='ncat -4u'
     fi
     # ---------- nc ----------
+        
+    
+    # ---------- od ----------
+    alias od='od -tx1 -Ax -v'
+    # ---------- od ----------
 
 
 fi
