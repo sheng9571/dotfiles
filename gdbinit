@@ -18,6 +18,7 @@ alias exit = quit
 
 # scripts
 python
-sys.path.insert(0, '/home/sheng/.dotfiles/gdb/scripts')
+import sys, os
+sys.path.insert(0, os.getenv('HOME') + '/.dotfiles/gdb/scripts')
 import backtrace
 end

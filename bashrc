@@ -465,3 +465,6 @@ function dkip() {
 function gdbattach() {
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 }
+alias pyde='~/.ctf_tools/uncompyle2/scripts/uncompyle2'
+alias rsact='python3 ~/.ctf_tools/RsaCtfTool/RsaCtfTool.py'
+alias rsat='python ~/.ctf_tools/rsatool/rsatool.py'
