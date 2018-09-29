@@ -1,6 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/home/sheng/.dotfiles/gdb'
 let g:netrw_dirhist_2='/home/sheng/docker_practice/gitlab/docker_compose'
 let g:netrw_dirhist_3='/home/sheng/docker_practice/shenker/ctf'
 let g:netrw_dirhist_4='/home/sheng/docker_practice/shenker/basic'
+let g:netrw_dirhist_5='/root/.dotfiles/gdb/scripts'
