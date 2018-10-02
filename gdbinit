@@ -21,34 +21,11 @@ set prompt \001\033[1;31m\002[\033[01;31mgdb\033[01;31m\]\033[01;90m\> \001\033[
 # alias
 alias exit = quit
 alias inr = info register
+alias ipm = info proc mapping
 
 # scripts
 python
 import sys, os
 sys.path.insert(0, os.getenv('HOME') + '/.dotfiles/gdb/scripts')
 import backtrace
-end
-
-
-# step ( trace function call )
-define sis
-        si
-        echo EIP\t
-        x/wi $eip
-        echo ESP\t
-        x/wx $esp
-        echo EBP\t
-        x/wx $ebp
-end
-
-
-# step ( don't trace function call )
-define nis
-        ni
-        echo EIP\t
-        x/wi $eip
-        echo ESP\t
-        x/wx $esp
-        echo EBP\t
-        x/wx $ebp
 end
