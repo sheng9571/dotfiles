@@ -37,7 +37,7 @@ end
 define sie
     si
     echo EIP\t
-    w/wi $eip
+    x/wi $eip
     echo ESP\t
     x/wx $esp
     echo EBP\t
@@ -48,7 +48,7 @@ end
 define nie
     ni
     echo EIP\t
-    w/wi $eip
+    x/wi $eip
     echo ESP\t
     x/wx $esp
     echo EBP\t
@@ -60,20 +60,20 @@ end
 define sir
     si
     echo RIP\t
-    w/wi $rip
+    x/gi $rip
     echo RSP\t
-    x/wx $rsp
+    x/gx $rsp
     echo RBP\t
-    x/wx $rbp
+    x/gx $rbp
 end
 
 # ni ( do not trace into function call on x64 )
 define nir
     ni
     echo RIP\t
-    w/wi $rip
+    x/gi $rip
     echo RSP\t
-    x/wx $rsp
+    x/gx $rsp
     echo RBP\t
-    x/wx $rbp
+    x/gx $rbp
 end
