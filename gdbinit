@@ -68,7 +68,7 @@ define sir
 end
 
 # ni ( do not trace into function call on x64 )
-define nie
+define nir
     ni
     echo RIP\t
     w/wi $rip
