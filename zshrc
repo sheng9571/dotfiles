@@ -246,7 +246,7 @@ if [ `uname` = "Linux" ]; then
     
 
         # ---------- objdump ----------
-        alias obd='objdump -d'
+        alias obd='objdump -M intel -d'
         # ---------- objdump ----------
 
 
@@ -309,7 +309,7 @@ if [ `uname` = "Linux" ]; then
         # ---------- readelf ----------
     
         # ---------- objdump ----------
-        alias obd='objdump -d'
+        alias obd='objdump -M intel -d'
         # ---------- objdump ----------
 
  	fi
@@ -374,7 +374,7 @@ elif [ `uname` = "freebsd" ]; then
         
     
     # ---------- objdump ----------
-    alias obd='objdump -d'
+    alias obd='objdump -M intel -d'
     # ---------- objdump ----------
 
 

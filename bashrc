@@ -282,6 +282,16 @@ if [ `uname` = "Linux" ]; then
         # ---------- od ----------
         alias od='od -tx1z -Ax -v'
         # ---------- od ----------
+        
+        
+        # ---------- readelf ----------
+        alias relf='readelf -e'
+        # ---------- readelf ----------
+       
+
+        # ---------- objdump ----------
+        alias obd='objdump -M intel -d'
+        # ---------- objdump ----------
 
 
  	else
@@ -336,6 +346,16 @@ if [ `uname` = "Linux" ]; then
         # ---------- od ----------
         alias od='od -tx1z -Ax -v'
         # ---------- od ----------
+        
+        
+        # ---------- readelf ----------
+        alias relf='readelf -e'
+        # ---------- readelf ----------
+    
+
+        # ---------- objdump ----------
+        alias obd='objdump -M intel -d'
+        # ---------- objdump ----------
 
  	fi
 elif [ `uname` = "freebsd" ]; then
@@ -392,6 +412,16 @@ elif [ `uname` = "freebsd" ]; then
     # ---------- od ----------
     alias od='od -tx1z -Ax -v'
     # ---------- od ----------
+    
+    
+    # ---------- readelf ----------
+    alias relf='readelf -e'
+    # ---------- readelf ----------
+        
+    
+    # ---------- objdump ----------
+    alias obd='objdump -M intel -d'
+    # ---------- objdump ----------
 
 
 elif [ `uname` = "Darwin" ]; then
@@ -433,6 +463,10 @@ elif [ `uname` = "Darwin" ]; then
     alias od='od -tx1 -Ax -v'
     # ---------- od ----------
 
+    
+    # ---------- readelf ----------
+    # alias relf='readelf.py -e'
+    # ---------- readelf ----------
 
 fi
 
