@@ -68,6 +68,9 @@ let g:airline_theme='onedark'
 " Highligth python syntax
 let python_highlight_all = 1
 
+" Hex Mode varialbe
+let g:hex_mode = 0
+
 "#######################################################
 
 " statusline
@@ -107,8 +110,8 @@ endfunction
 
 " shortcut
 " Toggle mouse
-map <C-n> :call SwitchMouseMode()<CR>
-map! <C-n> <Esc>:call SwitchMouseMode()<CR>
+map <F1> :call SwitchMouseMode()<CR>
+map! <F1>:call SwitchMouseMode()<CR>
 function SwitchMouseMode()
 	if (&mouse == "a")
 		let &mouse = ""
@@ -121,8 +124,8 @@ endfunction
 
 
 " paste mode
-map <F3> :call SwitchPasteMode()<CR>
-map! <F3> :call SwitchPasteMode()<CR>
+map <F2> :call SwitchPasteMode()<CR>
+map! <F2> :call SwitchPasteMode()<CR>
 function SwitchPasteMode()
 	if (&paste == 1)
 		let &paste = 0
@@ -130,6 +133,22 @@ function SwitchPasteMode()
 	else
 		let &paste = 1
 		echo "Paste Mode is enabled."
+	endif
+endfunction
+
+
+" hex mode
+map <F3> :call SwitchHexMode()<CR>
+map! <F3> :call SwitchHexMode()<CR>
+function SwitchHexMode()
+	if (g:hex_mode == 1)
+		let g:hex_mode = 0
+        execute ':silent :%!xxd -r'
+		echo "Hex Mode is disabled."
+	else
+		let g:hex_mode = 1
+        execute ':silent :%!xxd -u'
+		echo "Hex Mode is enabled."
 	endif
 endfunction
 "#######################################################
