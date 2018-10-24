@@ -56,6 +56,23 @@ define nie
 end
 
 
+# print eip、esp、ebp
+define peisb
+    echo EIP\t
+    x/gi $eip
+    echo ESP\t
+    x/gx $esp
+    echo EBP\t
+    x/gx $ebp
+end
+
+
+# print offset + 44 stack value ( x86 )
+define pes
+    x/44wx $esp
+end
+
+
 # si ( step in function call on x64 )
 define sir
     si
@@ -76,4 +93,21 @@ define nir
     x/gx $rsp
     echo RBP\t
     x/gx $rbp
+end
+
+
+# print rip、rsp、rbp
+define prisb
+    echo RIP\t
+    x/gi $rip
+    echo RSP\t
+    x/gx $rsp
+    echo RBP\t
+    x/gx $rbp
+end
+
+
+# print offset + 44 stack value ( x64 )
+define prs
+    x/44gx $rsp
 end
