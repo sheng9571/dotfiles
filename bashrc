@@ -301,7 +301,8 @@ if [ `uname` = "Linux" ]; then
        
 
         # ---------- objdump ----------
-        alias obd='objdump -M intel -d'
+        alias objdump='objdump -M intel'
+        alias obd='objdump -d'
         # ---------- objdump ----------
 
 
@@ -365,7 +366,8 @@ if [ `uname` = "Linux" ]; then
     
 
         # ---------- objdump ----------
-        alias obd='objdump -M intel -d'
+        alias objdump='objdump -M intel'
+        alias obd='objdump -d'
         # ---------- objdump ----------
 
  	fi
@@ -431,7 +433,8 @@ elif [ `uname` = "freebsd" ]; then
         
     
     # ---------- objdump ----------
-    alias obd='objdump -M intel -d'
+    alias objdump='objdump -M intel'
+    alias obd='objdump -d'
     # ---------- objdump ----------
 
 
