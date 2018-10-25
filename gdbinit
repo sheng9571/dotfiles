@@ -4,6 +4,9 @@ set disassembly-flavor intel
 # page size
 set pagination off
 
+# c++ name mangling
+set print asm-demangle on
+
 # history
 set history save on
 set history filename ~/.gdb_history

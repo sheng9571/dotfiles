@@ -168,6 +168,15 @@ alias py=python
 alias py3=python3
 # alias -s jar='java -jar'
 
+alias tml='tmux ls'
+alias tma='tmux attach-session -t'
+alias tmd='tmux detach'
+
+# vimdiff vertically split
+alias vd='vimdiff'
+# vimdiff horizontally split
+alias vdh='vimdiff -o'
+
 # wget -O ~/.dotfiles/gdb/gef.py -q https://github.com/hugsy/gef/raw/master/gef.py
 alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
@@ -490,4 +499,81 @@ function dkip() {
 # GDB attach bug
 function gdbattach() {
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+}
+
+
+# vimdiff hex mode vertically split
+function vdx() {
+    f1_len=${#1}
+    f2_len=${#2}
+
+    if [[ "$f1_len" -gt 0 && "f2_len" -gt 0 ]]; then
+        vimdiff <(xxd $1) <(xxd $2)
+    else
+        echo Must give two files!
+    fi
+}
+
+# vimdiff hex mode horizontally split
+function vdxh() {
+    f1_len=${#1}
+    f2_len=${#2}
+
+    if [[ "$f1_len" -gt 0 && "f2_len" -gt 0 ]]; then
+        vimdiff -o <(xxd $1) <(xxd $2)
+    else
+        echo Must give two files!
+    fi
+}
+
+
+# nasm assemble x86 & load library
+function na86() {
+    len=${#1};
+
+    if [ "$len" -gt 0 ]; then
+        name="$(echo "$1" | cut -d'.' -f1)";
+        nasm -f elf -o "$name".o $1;
+        ld -m elf_i386 -o "$name" "$name".o;
+    else
+        echo Must give one argument!
+    fi
+}
+
+# nasm assemble x64 & load library
+function na64() {
+    len=${#1};
+
+    if [ "$len" -gt 0 ]; then
+        name="$(echo "$1" | cut -d'.' -f1)";
+        nasm -f elf64 -o "$name".o $1;
+        ld -m elf_x86_64 -o "$name" "$name".o;
+    else
+        echo Must give one argument!
+    fi
+}
+
+
+# gcc compiler x86
+function gc32() {
+    len=${#1};
+    
+    if [ "$len" -gt 0 ]; then
+        name="$(echo "$1" | cut -d'.' -f1)";
+        gcc -m32 -o "$name" $1;
+    else
+        echo Must give one argument!
+    fi
+}
+
+# gcc compiler x64
+function gc64() {
+    len=${#1};
+    
+    if [ "$len" -gt 0 ]; then
+        name="$(echo "$1" | cut -d'.' -f1)";
+        gcc -m64 -o "$name" $1;
+    else
+        echo Must give one argument!
+    fi
 }
