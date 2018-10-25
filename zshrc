@@ -256,7 +256,7 @@ if [ `uname` = "Linux" ]; then
 
         # ---------- objdump ----------
         alias objdump='objdump -M intel'
-        alias obd='objdump --d'
+        alias obd='objdump -d'
         # ---------- objdump ----------
 
 
