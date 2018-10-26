@@ -62,11 +62,11 @@ end
 # print eip、esp、ebp
 define peisb
     echo EIP\t
-    x/gi $eip
+    x/wi $eip
     echo ESP\t
-    x/gx $esp
+    x/wx $esp
     echo EBP\t
-    x/gx $ebp
+    x/wx $ebp
 end
 
 
