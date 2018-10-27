@@ -230,6 +230,7 @@ alias gdb='gdb -q'
 alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
 
 alias dkcu='docker-compose up -d'
+alias dkcur='docker-compose up -d --force-recreate --build'
 alias dkcd='docker-compose down'
 alias dkcl='docker-compose logs'
 
