@@ -1,7 +1,10 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 print "Color indexes should be drawn in bold text of the same color."
 print
+
+col_tpe = {'normal': 0, 'bold': 1, 'dim': 2, 'underline': 4, 'blink': 5, 'reverse': 7, 'invisible': 8}
 
 colored = [0] + [0x5f + 40 * n for n in range(0, 5)]
 colored_palette = [
@@ -17,7 +20,9 @@ grayscale_palette = [
     for a in grayscale
 ]
 
-normal = "\033[38;5;%sm"
+normal = "\033[%d38;5;" % col_tpe['normal']
+normal += "%sm" 
+bold = "\033[%d;38;5;" % col_tpe['bold']
 bold = "\033[1;38;5;%sm"
 reset = "\033[0m"
 
