@@ -18,6 +18,9 @@ set history expansion on
 # set print array-indexes on
 # set python print-stack full
 
+# ignore alarm()
+handle SIGALRM ignore
+
 # promot
 set prompt \001\033[1;31m\002[\033[01;31mgdb\033[01;31m\]\033[01;90m\> \001\033[0m\002
 
