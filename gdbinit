@@ -79,6 +79,12 @@ define pes
 end
 
 
+# print 10 instructions ( x86 )
+define pei
+    x/10i $eip
+end
+
+
 # si ( step in function call on x64 )
 define sir
     si
@@ -116,4 +122,10 @@ end
 # print offset + 44 stack value ( x64 )
 define prs
     x/44gx $rsp
+end
+
+
+# print 10 instructions ( x64 )
+define pri
+    x/10i $rip
 end
