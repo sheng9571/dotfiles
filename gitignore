@@ -11,3 +11,6 @@ Thumbs.db
 
 # Btye code #
 *.pyc
+
+# vim tempfile #
+*.netrwhist
