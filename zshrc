@@ -177,9 +177,8 @@ alias vd='vimdiff'
 # vimdiff horizontally split
 alias vdh='vimdiff -o'
 
-# wget -O ~/.dotfiles/gdb/gef.py -q https://github.com/hugsy/gef/raw/master/gef.py
 alias gdb='gdb -q'
-alias gef='gdb -q -x ~/.dotfiles/gdb/gef.py'
+alias gef='gdb -q -x ~/.ctf_tools/gdb/gef.py'
 
 alias dkcu='docker-compose up -d'
 alias dkcur='docker-compose up -d --force-recreate --build'

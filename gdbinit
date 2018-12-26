@@ -33,7 +33,7 @@ alias mbt = backtrace
 # scripts
 python
 import sys, os
-sys.path.insert(0, os.getenv('HOME') + '/.dotfiles/gdb/scripts')
+sys.path.insert(0, os.getenv('HOME') + '/.ctf_tools/gdb/scripts')
 import backtrace
 end
 
