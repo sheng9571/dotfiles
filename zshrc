@@ -145,6 +145,12 @@ setopt HIST_IGNORE_DUPS
 # core dump
 limit coredumpsize 0
 
+# bindkey to fix home & end
+# home
+bindkey "^[[1~" beginning-of-line
+# end
+bindkey "^[[4~" end-of-line
+
 
 # common command 
 alias shutdown='shutdown -h now'
