@@ -35,6 +35,19 @@ python
 import sys, os
 sys.path.insert(0, os.getenv('HOME') + '/.ctf_tools/gdb/scripts')
 import backtrace
+# cmd lists
+import cmd
+import magic
+import map
+import adv_map
+import at
+import checksec
+import ld_preload
+import relf
+import h2b
+import ep
+import bm
+import libc_str
 end
 
 # self-defined function
