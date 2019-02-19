@@ -48,6 +48,7 @@ import h2b
 import ep
 import bm
 import libc_str
+import libc
 end
 
 # self-defined function
