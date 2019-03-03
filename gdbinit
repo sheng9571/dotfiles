@@ -49,6 +49,9 @@ import ep
 import bm
 import libc_str
 import libc
+import plt_parse
+import asch
+import ssch
 end
 
 # self-defined function
