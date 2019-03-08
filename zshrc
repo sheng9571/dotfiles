@@ -177,6 +177,7 @@ alias py3=python3
 alias tml='tmux ls'
 alias tma='tmux attach-session -t'
 alias tmd='tmux detach'
+alias tmda='tmux detach -a'
 
 # vimdiff vertically split
 alias vd='vimdiff'
@@ -184,7 +185,7 @@ alias vd='vimdiff'
 alias vdh='vimdiff -o'
 
 alias gdb='gdb -q'
-alias gef='gdb -q -x ~/.ctf_tools/gdb/gef.py'
+alias gef='gdb -q -x ~/gdb/gef.py'
 
 alias dkcu='docker-compose up -d'
 alias dkcur='docker-compose up -d --force-recreate --build'
