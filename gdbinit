@@ -52,6 +52,7 @@ import libc
 import plt_parse
 import asch
 import ssch
+import chunk
 end
 
 # self-defined function
