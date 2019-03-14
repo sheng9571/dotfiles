@@ -195,7 +195,7 @@ alias dkcl='docker-compose logs'
 alias xxd='xxd -u'
 alias hexdump='hexdump -vC'
 
-
+alias nmp='nmap -vv -sS -sV -O -F -T5 -e eth0 -g 9453'
 
 # others alias on different os
 if [ `uname` = "Linux" ]; then
