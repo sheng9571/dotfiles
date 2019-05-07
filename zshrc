@@ -118,7 +118,7 @@ then
 	# alias ls='ls --color=tty'
 	alias ls='ls -G --color=tty'
 	alias ll='ls -ahlF --time-style="+%Y-%m-%d %H:%M:%S"'
-	alias p='ps aT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
+	alias p='ps axT -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args"'
 	alias pp='ps T -o "uname=user,tty=tty,ppid=pid,pid=tid,%cpu=cpu,%mem=mem,cmd=args" -p'
 	alias df='df -hT'
 	alias free='free -h'
