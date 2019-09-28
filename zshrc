@@ -484,7 +484,11 @@ zstyle ':completion:*:*:*:*:*' menu select
 
 # Docker
 function dk(){
-    docker exec -it $1 zsh
+    docker exec -it $1 /usr/bin/zsh 2>/dev/null ||
+    docker exec -it $1 /bin/bash 2>/dev/null ||
+    docker exec -it $1 /bin/ash 2>/dev/null ||
+    docker exec -it $1 /bin/sh 2>/dev/null ||
+    echo no such shll in container!
 }
 
 
@@ -496,7 +500,7 @@ function dksr() {
 
 # Docker rm image
 function dkri() {
-    docker image rm $1
+    docker image rm -f $1
 }
 
 
