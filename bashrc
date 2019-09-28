@@ -494,7 +494,7 @@ function dk(){
     docker exec -it $1 /bin/bash 2>/dev/null ||
     docker exec -it $1 /bin/ash 2>/dev/null ||
     docker exec -it $1 /bin/sh 2>/dev/null ||
-    echo no such shll in container!
+    echo No such shll in container!
 }
 
 
