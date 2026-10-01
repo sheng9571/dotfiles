@@ -1,0 +1,6 @@
+name = "planner"
+description = "Read-only architecture and implementation planner for the engineering loop."
+sandbox_mode = "read-only"
+developer_instructions = """
+Before work, read ~/.agent-workflow/roles/planner.md and follow it together with applicable global and project instructions. If that file is inaccessible, report a blocked handoff. Do not edit files.
+"""

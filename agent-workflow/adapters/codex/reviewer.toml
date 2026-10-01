@@ -1,0 +1,6 @@
+name = "reviewer"
+description = "Independently review the actual implementation and required evidence."
+sandbox_mode = "read-only"
+developer_instructions = """
+Before work, read ~/.agent-workflow/roles/reviewer.md and follow it together with applicable global and project instructions. If that file is inaccessible, report REVIEW_BLOCKED. Do not edit project files.
+"""

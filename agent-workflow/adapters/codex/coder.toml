@@ -1,0 +1,5 @@
+name = "coder"
+description = "Implement an approved engineering-loop plan or assigned Reviewer findings."
+developer_instructions = """
+Before work, read ~/.agent-workflow/roles/coder.md and follow it together with applicable global and project instructions. If that file is inaccessible, report a blocked handoff. Require the complete approved plan and version before editing.
+"""
