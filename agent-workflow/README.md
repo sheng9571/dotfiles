@@ -1,6 +1,6 @@
 # Engineering Loop: Beginner's Guide
 
-Engineering Loop lets you start a Planner -> plan approval -> Coder -> Reviewer workflow with one request. You review the plan; after approval, implementation and review continue automatically within the task. The Reviewer completes at most three review rounds. The configuration is installed for your user account, so you do not need to copy agent files into each project.
+Engineering Loop lets you start a Planner -> plan approval -> Coder -> Reviewer workflow with one request. You review the plan; after approval, implementation and review continue automatically within the task. The Reviewer completes at most two reviews per explicitly authorized review cycle. The configuration is installed for your user account, so you do not need to copy agent files into each project.
 
 ## 1. Install once
 
@@ -44,7 +44,7 @@ After reviewing the current plan, send this **as its own message**:
 PLAN_APPROVED
 ```
 
-Do not place it inside a quote or a longer message. The Orchestrator verifies the plan version, prepares a task branch, then delegates implementation to Coder and independent review to Reviewer. Major findings go back to Coder within the three-review limit. A material change to the plan requires a new version and another approval. If several tasks are awaiting approval, identify the task first so the approval cannot be assigned to the wrong plan.
+Do not place it inside a quote or a longer message. The Orchestrator verifies the plan version, prepares a task branch, then delegates implementation to Coder and independent review to Reviewer. Major findings go back to Coder within the two-review limit. A material change to the plan requires a new version and another approval. If several tasks are awaiting approval, identify the task first so the approval cannot be assigned to the wrong plan.
 
 At completion, you receive the changed files, validation results, actual branch name, a one-line Conventional Commit message, and a suggested push command. The workflow does not automatically commit or push and never runs `git add .`.
 
@@ -72,6 +72,7 @@ Open either tool **in the project directory** after installing. Replace the exam
 | Check documentation | `$engineering-loop docs-only: Audit the project documentation against the code and configuration. Report gaps; do not edit.` | `/engineering-loop docs-only: Audit the project documentation against the code and configuration. Report gaps; do not edit.` |
 | Update documentation | `$engineering-loop docs-only: Update documentation needed to maintain and operate this project.` | `/engineering-loop docs-only: Update documentation needed to maintain and operate this project.` |
 | Resume interrupted work | `$engineering-loop resume: Continue task <task-id>.` | `/engineering-loop resume: Continue task <task-id>.` |
+| Continue after the two-review limit | `$engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews to fix the remaining findings.` | `/engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews to fix the remaining findings.` |
 | Pause at a safe boundary | `$engineering-loop stop: Pause task <task-id>.` | `/engineering-loop stop: Pause task <task-id>.` |
 | Cancel and remove task state | `$engineering-loop cancel: Cancel task <task-id>. Report remaining project changes.` | `/engineering-loop cancel: Cancel task <task-id>. Report remaining project changes.` |
 
@@ -83,7 +84,7 @@ For a **single role without the full loop**, ask the main assistant directly. Th
 | Coder | `Use the installed coder agent only for approved plan <path>, version <version>. Implement its scope and run the required checks; do not start an independent review.` | Changes and validation against that approved plan. Supply the approval and task context so the handoff can be verified. |
 | Reviewer | `Use the installed reviewer agent only. Review the current branch diff against approved plan <path>. Report findings with evidence; do not edit.` | An independent verdict for the specified stable change. |
 
-These are requests to **delegate** to the installed roles, not commands named `$planner`, `$coder`, or `$reviewer`. If a tool cannot start the specified role, it should tell you instead of presenting an ordinary assistant response as an independent review. For a small ordinary request, omit the engineering-loop prefix and describe the task normally; that does not start plan approval or the three-round review cycle.
+These are requests to **delegate** to the installed roles, not commands named `$planner`, `$coder`, or `$reviewer`. If a tool cannot start the specified role, it should tell you instead of presenting an ordinary assistant response as an independent review. For a small ordinary request, omit the engineering-loop prefix and describe the task normally; that does not start plan approval or the two-review cycle.
 
 ### What each workflow status means
 
@@ -91,7 +92,7 @@ The Orchestrator writes the current `Phase` to `<project>/.agent-runs/<task-id>/
 
 | Status | What happens | What you do |
 | --- | --- | --- |
-| `NEW` | Creates a task ID and temporary checkpoint. | Start a full loop or another explicit mode. |
+| `NEW` | Creates a task ID and temporary checkpoint; reports the task ID to you. | Save the task ID for later resume. |
 | `DISCOVERY` | Planner examines the project, requirements, and applicable standards. | Answer only material design questions if asked. |
 | `PLAN_READY` | You receive the complete versioned plan. Revisions stay here with a new version. | Review the current version; request changes or send `PLAN_APPROVED` as a standalone message. |
 | `APPROVED` | Orchestrator verifies and records approval of that exact plan. | No extra prompt is needed. |
@@ -100,16 +101,16 @@ The Orchestrator writes the current `Phase` to `<project>/.agent-runs/<task-id>/
 | `REVIEW_READY` | Orchestrator fixes a stable diff target and sends it to Reviewer. | No action. |
 | `REVIEW_DECISION` | Records Reviewer's verdict and completed review count. | Read a reported blocker if the workflow cannot continue. |
 | `FIXING` | Coder addresses assigned major findings; the change returns for review. | No action unless the fix changes the approved plan materially. |
-| `BLOCKED` | Stops automatic progress and preserves the checkpoint and project changes. | Resolve the stated blocker, then use `resume: Continue task <task-id>`. |
+| `BLOCKED` | Stops automatic progress and preserves the checkpoint and project changes. | Resolve the stated blocker. If the two-review limit was reached, explicitly authorize a new cycle; plain resume does not restart review. |
 | `PAUSED` | Stops at a safe boundary while preserving task state. | Use `resume: Continue task <task-id>` when ready. |
 | `COMPLETE` | Reports validated results and removes this task's temporary directory. | Review the result; commit or push yourself if wanted. |
 | `CANCELLED` | Reports any remaining project changes and removes this task's temporary directory. | No resume is possible for this task ID. |
 
-The loop allows **at most three completed Reviewer reviews total**, including the first review. A major finding after the third review leaves the task `BLOCKED`; a material plan change returns to planning and requires a new approval. Do not edit `Phase` by hand to skip a gate. To find the task ID, look at the direct child folder name under `<project>/.agent-runs/`; the checkpoint repeats it on its `Task ID:` line. A usage limit or closed session does not automatically restart work: reopen the project in either tool and request `resume` with that ID. If approval evidence cannot be verified across sessions or tools, the Orchestrator will ask for a fresh standalone `PLAN_APPROVED`.
+The loop allows **at most two completed Reviewer reviews per explicitly authorized cycle**. If the first review is `PASS`, the task completes without a second review. The second review runs only after Coder fixes assigned major findings. Unresolved BLOCKER/MAJOR findings after the second review leave the task `BLOCKED`; plain resume does not reset the limit. To keep working on the same task, explicitly request a new cycle of at most two reviews, using the example above. The Orchestrator keeps the same task ID and cumulative review count, rechecks the plan, approval, branch, diff and findings, then sends remaining Coder-owned findings to Coder. A material plan change returns to planning and requires a new approval. Do not edit `Phase` by hand to skip a gate. The Orchestrator reports the task ID when it creates the checkpoint and in later task-state updates; PAUSED and BLOCKED reports also include a copyable recovery command. To find it yourself, look at the direct child folder name under `<project>/.agent-runs/`; the checkpoint repeats it on its `Task ID:` line. You can also ask the Orchestrator to list resumable task IDs and phases. A usage limit or closed session does not automatically restart work: reopen the project in either tool and request `resume` with that ID. If approval evidence cannot be verified across sessions or tools, the Orchestrator will ask for a fresh standalone `PLAN_APPROVED`.
 
 ## 5. Interruptions and project documentation
 
-An active task stores its plan, checkpoint, and any needed review notes under `<project>/.agent-runs/<task-id>/`. This directory must never enter Git; it is deleted when the task completes or is cancelled. If the tool stops or your usage limit is reached, return to the project and use `resume`. The workflow checks the actual files, approved plan version, and review count before continuing. It does not restart itself in the background when a usage limit resets.
+An active task stores its plan, checkpoint, and any needed review notes under `<project>/.agent-runs/<task-id>/`. This directory must never enter Git; it is deleted when the task completes or is cancelled. If the tool stops or your usage limit is reached, return to the project and use `resume`. The workflow checks the actual files, approved plan version, review-cycle budget, and cumulative review count before continuing. It does not restart itself in the background when a usage limit resets.
 
 Planner identifies the long-lived documentation relevant to the change, Coder updates it alongside the implementation, and Reviewer checks it against actual behavior. File names depend on the project. The goal is for a person or agent who did not participate in development to understand, verify, diagnose, change, and operate the system using project documentation and verifiable contracts. Document external access and infrastructure requirements; do not claim that an unverified production deployment succeeded.
 
@@ -214,7 +215,7 @@ The global workflow works in any project. It creates or updates project files on
 ├── .gitignore                             Includes .agent-runs/ after task branch creation
 └── .agent-runs/                           Temporary task state; NEVER commit this directory
     └── <task-id>/
-        ├── checkpoint.md                 Current phase, plan version, review count, next action
+        ├── checkpoint.md                 Current phase, plan version, review cycle, cycle and cumulative review counts, next action
         ├── handover.md                   Optional temporary cross-session guide
         ├── plan-draft.md                 Complete versioned plan, including approved content
         └── reviews/                      Detailed review notes only when needed
@@ -224,6 +225,7 @@ The global workflow works in any project. It creates or updates project files on
 The project may have a different structure. Planner chooses which documentation is needed for the actual system and change; Coder keeps it consistent with implementation; Reviewer checks it. Long-lived project documentation and an applicable `.gitignore` rule belong in the project Git repository. `.agent-runs/` does **not**: it exists only while a task is active or blocked, and its task directory is removed after completion or cancellation. A plan stays there during the task; only decisions or contracts that remain useful are moved into long-lived project documentation.
 
 Project-level `AGENTS.md` and `CLAUDE.md` are optional and can add more specific rules for that project. They are separate from the global role files installed in your home directory.
+
 ## 7. The maintainable handoff standard
 
 **Goal:** Enable a person or agent with no prior involvement in development to take over maintaining, modifying, migrating, or redeploying the system using only the project's documentation and verifiable contracts. This workflow README explains how to request that result; it is **not** the project documentation itself. A generated document is useful only when it matches the code, schemas, infrastructure configuration, and observed behavior. More pages alone do not meet this goal.
@@ -246,6 +248,7 @@ This applies to any stack or interface. For example, a mobile application may ne
 The handoff is strongest when a new maintainer can follow the project README to locate the relevant contracts, reproduce a local run and key tests, explain a representative data flow, diagnose a sample failure, and identify the exact deployment and rollback path. Reviewer should attempt that independent check for the changed scope. If credentials, production infrastructure, signing keys, private registries, or another external prerequisite are unavailable, document their purpose, access owner, and verification status. A repository alone cannot prove an unperformed production deployment or guarantee a future rewrite or migration will be effortless; the workflow must state the remaining uncertainty rather than claim success.
 
 You can request this separately with `docs-only` (see section 4). A read-only audit reports gaps; a documentation update verifies the relevant facts before editing and follows plan approval and review for a nontrivial change. The full implementation loop includes the same documentation work when the task changes behavior or operations.
+
 ## 8. Hand over work to a new session
 
 Use `session-handover` when another person or agent needs to understand unfinished work. It also works outside the engineering loop. The handover captures the goal, verified state, decisions and reasons, important constraints and pitfalls, unresolved questions, and next actions without reproducing the chat transcript. It distinguishes verified facts from user statements and unknowns.
@@ -259,4 +262,4 @@ Use `session-handover` when another person or agent needs to understand unfinish
 
 By default, handover appears **in the current session only**. A Markdown copy is optional. For an active loop task, a requested saved copy goes to `<project>/.agent-runs/<task-id>/handover.md`; it is temporary, ignored by Git, and removed when the task completes or is cancelled. For standalone work, specify where to save it if you need a file. Put information that must survive the task in the project's durable documentation and contracts instead.
 
-The handover is a **reading guide**, while `checkpoint.md` is the workflow's state record. The checkpoint tracks the exact phase, plan/version/approval evidence, branch, review count, findings, and next gate. Planner-to-Coder and Coder-to-Reviewer handoffs still use the full approved plan and actual diff, not a handover summary. A new session may read a handover first, but `resume` must independently verify the checkpoint, approval, Git state, and files. A handover cannot approve a plan or skip a review. If the two conflict, stop the dependent work and resolve the discrepancy.
+The handover is a **reading guide**, while `checkpoint.md` is the workflow's state record. The checkpoint tracks the exact phase, plan/version/approval evidence, branch, review cycle, cycle and cumulative review counts, findings, and next gate. Planner-to-Coder and Coder-to-Reviewer handoffs still use the full approved plan and actual diff, not a handover summary. A new session may read a handover first, but `resume` must independently verify the checkpoint, approval, Git state, and files. A handover cannot approve a plan or skip a review. If the two conflict, stop the dependent work and resolve the discrepancy.
