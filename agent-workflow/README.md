@@ -1,6 +1,6 @@
 # Engineering Loop: Beginner's Guide
 
-Engineering Loop lets you start a Planner -> plan approval -> Coder -> Reviewer workflow with one request. You review the plan; after approval, implementation and review continue automatically within the task. The Reviewer completes at most two reviews per explicitly authorized review cycle. The configuration is installed for your user account, so you do not need to copy agent files into each project.
+Engineering Loop lets you start a Planner -> plan approval -> Coder -> Reviewer workflow with one request. You review the plan; after approval, implementation and review continue automatically within the task. Planner decomposes the confirmed scope into work items and staged checks, choosing concentrated or milestone review. Each review gate permits at most two reviews per authorized cycle; the final gate checks the whole task. The configuration is installed for your user account, so you do not need to copy agent files into each project.
 
 ## 1. Install once
 
@@ -44,7 +44,7 @@ After reviewing the current plan, send this **as its own message**:
 PLAN_APPROVED
 ```
 
-Do not place it inside a quote or a longer message. The Orchestrator verifies the plan version, prepares a task branch, then delegates implementation to Coder and independent review to Reviewer. Major findings go back to Coder within the two-review limit. A material change to the plan requires a new version and another approval. If several tasks are awaiting approval, identify the task first so the approval cannot be assigned to the wrong plan.
+Do not place it inside a quote or a longer message. The Orchestrator verifies the plan version, prepares a task branch, then delegates implementation to Coder and independent review to Reviewer. Major findings go back to Coder within that gate's two-review limit. A milestone PASS allows dependent work to proceed; the task finishes only after its final whole-task gate passes. A material change to the plan requires a new version and another approval. If several tasks are awaiting approval, identify the task first so the approval cannot be assigned to the wrong plan.
 
 At completion, you receive the changed files, validation results, actual branch name, a one-line Conventional Commit message, and a suggested push command. The workflow does not automatically commit or push and never runs `git add .`.
 
@@ -72,7 +72,7 @@ Open either tool **in the project directory** after installing. Replace the exam
 | Check documentation | `$engineering-loop docs-only: Audit the project documentation against the code and configuration. Report gaps; do not edit.` | `/engineering-loop docs-only: Audit the project documentation against the code and configuration. Report gaps; do not edit.` |
 | Update documentation | `$engineering-loop docs-only: Update documentation needed to maintain and operate this project.` | `/engineering-loop docs-only: Update documentation needed to maintain and operate this project.` |
 | Resume interrupted work | `$engineering-loop resume: Continue task <task-id>.` | `/engineering-loop resume: Continue task <task-id>.` |
-| Continue after the two-review limit | `$engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews to fix the remaining findings.` | `/engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews to fix the remaining findings.` |
+| Continue after the two-review limit | `$engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews at gate <gate-id> to fix the remaining findings.` | `/engineering-loop resume: Continue task <task-id>; I explicitly authorize a new review cycle of at most two reviews at gate <gate-id> to fix the remaining findings.` |
 | Pause at a safe boundary | `$engineering-loop stop: Pause task <task-id>.` | `/engineering-loop stop: Pause task <task-id>.` |
 | Cancel and remove task state | `$engineering-loop cancel: Cancel task <task-id>. Report remaining project changes.` | `/engineering-loop cancel: Cancel task <task-id>. Report remaining project changes.` |
 
@@ -97,20 +97,20 @@ The Orchestrator writes the current `Phase` to `<project>/.agent-runs/<task-id>/
 | `PLAN_READY` | You receive the complete versioned plan. Revisions stay here with a new version. | Review the current version; request changes or send `PLAN_APPROVED` as a standalone message. |
 | `APPROVED` | Orchestrator verifies and records approval of that exact plan. | No extra prompt is needed. |
 | `GIT_PREP` | Checks existing work, switches to the default branch when safe, attempts pull, and creates a task branch. | Resolve a reported Git conflict if one prevents safe preparation. |
-| `IMPLEMENTING` | Coder implements the approved plan, tests it, and updates relevant documentation. | No action unless a new material decision is needed. |
-| `REVIEW_READY` | Orchestrator fixes a stable diff target and sends it to Reviewer. | No action. |
-| `REVIEW_DECISION` | Records Reviewer's verdict and completed review count. | Read a reported blocker if the workflow cannot continue. |
+| `IMPLEMENTING` | Coder implements ready work items, validates each useful stage, and updates documentation. | No action unless a new material decision is needed. |
+| `REVIEW_READY` | Orchestrator establishes the selected gate's stable target and evidence for Reviewer. | No action. |
+| `REVIEW_DECISION` | Records the gate verdict, gate cycle/counts, and task cumulative reviews. | Read a reported blocker if the workflow cannot continue. |
 | `FIXING` | Coder addresses assigned major findings; the change returns for review. | No action unless the fix changes the approved plan materially. |
-| `BLOCKED` | Stops automatic progress and preserves the checkpoint and project changes. | Resolve the stated blocker. If the two-review limit was reached, explicitly authorize a new cycle; plain resume does not restart review. |
+| `BLOCKED` | Preserves state when no safe approved work can advance. Individual blocked items/gates may coexist with independent runnable work. | Resolve the blocker. If a gate exhausted its two-review limit, explicitly authorize a new cycle at that gate; plain resume does not restart its review. |
 | `PAUSED` | Stops at a safe boundary while preserving task state. | Use `resume: Continue task <task-id>` when ready. |
 | `COMPLETE` | Reports validated results and removes this task's temporary directory. | Review the result; commit or push yourself if wanted. |
 | `CANCELLED` | Reports any remaining project changes and removes this task's temporary directory. | No resume is possible for this task ID. |
 
-The loop allows **at most two completed Reviewer reviews per explicitly authorized cycle**. If the first review is `PASS`, the task completes without a second review. The second review runs only after Coder fixes assigned major findings. Unresolved BLOCKER/MAJOR findings after the second review leave the task `BLOCKED`; plain resume does not reset the limit. To keep working on the same task, explicitly request a new cycle of at most two reviews, using the example above. The Orchestrator keeps the same task ID and cumulative review count, rechecks the plan, approval, branch, diff and findings, then sends remaining Coder-owned findings to Coder. A material plan change returns to planning and requires a new approval. Do not edit `Phase` by hand to skip a gate. The Orchestrator reports the task ID when it creates the checkpoint and in later task-state updates; PAUSED and BLOCKED reports also include a copyable recovery command. To find it yourself, look at the direct child folder name under `<project>/.agent-runs/`; the checkpoint repeats it on its `Task ID:` line. You can also ask the Orchestrator to list resumable task IDs and phases. A usage limit or closed session does not automatically restart work: reopen the project in either tool and request `resume` with that ID. If approval evidence cannot be verified across sessions or tools, the Orchestrator will ask for a fresh standalone `PLAN_APPROVED`.
+Each planned gate allows **at most two completed Reviewer reviews per authorized cycle**. First PASS ends that gate's cycle immediately. A milestone PASS releases dependent work; only the final full-task gate can complete the task. The second review follows required fixes. Unresolved BLOCKER/MAJOR findings after it block that gate and dependent work; independent approved items can still proceed safely. Plain resume does not reset a budget. To continue an exhausted gate, explicitly request a new cycle for the same task ID and gate ID using the example above. A task-only request is sufficient only if exactly one exhausted gate is unambiguous. Gate lifetime and task cumulative counts are preserved; a new cycle applies only to the selected gate. Material plan changes still require a revised plan and new approval. Do not edit `Phase` by hand to skip a gate. The Orchestrator reports the task ID when it creates the checkpoint and in later task-state updates; PAUSED and BLOCKED reports also include a copyable recovery command. To find it yourself, look at the direct child folder name under `<project>/.agent-runs/`; the checkpoint repeats it on its `Task ID:` line. You can also ask the Orchestrator to list resumable task IDs and phases. A usage limit or closed session does not automatically restart work: reopen the project in either tool and request `resume` with that ID. If approval evidence cannot be verified across sessions or tools, the Orchestrator will ask for a fresh standalone `PLAN_APPROVED`.
 
 ## 5. Interruptions and project documentation
 
-An active task stores its plan, checkpoint, and any needed review notes under `<project>/.agent-runs/<task-id>/`. This directory must never enter Git; it is deleted when the task completes or is cancelled. If the tool stops or your usage limit is reached, return to the project and use `resume`. The workflow checks the actual files, approved plan version, review-cycle budget, and cumulative review count before continuing. It does not restart itself in the background when a usage limit resets.
+An active task stores its plan, checkpoint, and any needed review notes under `<project>/.agent-runs/<task-id>/`. This directory must never enter Git; it is deleted when the task completes or is cancelled. If the tool stops or your usage limit is reached, return to the project and use `resume`. The workflow checks the actual files, approved plan version, work evidence/dependencies, each gate's review-cycle budget, and task cumulative count before continuing. It does not restart itself in the background when a usage limit resets.
 
 Planner identifies the long-lived documentation relevant to the change, Coder updates it alongside the implementation, and Reviewer checks it against actual behavior. File names depend on the project. The goal is for a person or agent who did not participate in development to understand, verify, diagnose, change, and operate the system using project documentation and verifiable contracts. Document external access and infrastructure requirements; do not claim that an unverified production deployment succeeded.
 
@@ -134,7 +134,8 @@ dotfiles/
     ├── engineering-loop/
     │   ├── SKILL.md                       Entry point for the complete workflow
     │   ├── workflow.md                    States, handoffs, review limit, and documentation gate
-    │   └── checkpoint-format.md          Fields and safety rules for resumable task state
+    │   ├── checkpoint-format.md          Fields and safety rules for resumable task state
+    │   └── work-plan.md                  Work items, dependencies, staged checks, and review schedule
     ├── adapters/
     │   ├── codex/
     │   │   ├── planner.toml               Codex entry point for Planner
@@ -167,13 +168,15 @@ The same layout is installed under `%USERPROFILE%` on Windows or `$HOME` on Linu
 │   └── engineering-loop/
 │       ├── SKILL.md
 │       ├── workflow.md
-│       └── checkpoint-format.md
+│       ├── checkpoint-format.md
+│       └── work-plan.md                  Work items, dependencies, staged checks, and review schedule
 ├── .agents/skills/session-handover/
 │   └── SKILL.md                          Codex discovers the handover skill here
 ├── .agents/skills/engineering-loop/
 │   ├── SKILL.md                          Codex discovers the skill here
 │   ├── workflow.md
-│   └── checkpoint-format.md
+│   ├── checkpoint-format.md
+│   └── work-plan.md                  Work items, dependencies, staged checks, and review schedule
 ├── .codex/
 │   ├── AGENTS.md                         Codex loads these global rules
 │   └── agents/
@@ -187,7 +190,8 @@ The same layout is installed under `%USERPROFILE%` on Windows or `$HOME` on Linu
     ├── skills/engineering-loop/
     │   ├── SKILL.md                      Claude Code discovers the skill here
     │   ├── workflow.md
-    │   └── checkpoint-format.md
+    │   ├── checkpoint-format.md
+    │   └── work-plan.md                  Work items, dependencies, staged checks, and review schedule
     └── agents/
         ├── planner.md                    Claude Code registers its three roles here
         ├── coder.md
@@ -215,7 +219,7 @@ The global workflow works in any project. It creates or updates project files on
 ├── .gitignore                             Includes .agent-runs/ after task branch creation
 └── .agent-runs/                           Temporary task state; NEVER commit this directory
     └── <task-id>/
-        ├── checkpoint.md                 Current phase, plan version, review cycle, cycle and cumulative review counts, next action
+        ├── checkpoint.md                 Phase, work/gate progress, evidence links, review budgets, next action
         ├── handover.md                   Optional temporary cross-session guide
         ├── plan-draft.md                 Complete versioned plan, including approved content
         └── reviews/                      Detailed review notes only when needed
@@ -262,4 +266,27 @@ Use `session-handover` when another person or agent needs to understand unfinish
 
 By default, handover appears **in the current session only**. A Markdown copy is optional. For an active loop task, a requested saved copy goes to `<project>/.agent-runs/<task-id>/handover.md`; it is temporary, ignored by Git, and removed when the task completes or is cancelled. For standalone work, specify where to save it if you need a file. Put information that must survive the task in the project's durable documentation and contracts instead.
 
-The handover is a **reading guide**, while `checkpoint.md` is the workflow's state record. The checkpoint tracks the exact phase, plan/version/approval evidence, branch, review cycle, cycle and cumulative review counts, findings, and next gate. Planner-to-Coder and Coder-to-Reviewer handoffs still use the full approved plan and actual diff, not a handover summary. A new session may read a handover first, but `resume` must independently verify the checkpoint, approval, Git state, and files. A handover cannot approve a plan or skip a review. If the two conflict, stop the dependent work and resolve the discrepancy.
+The handover is a **reading guide**, while `checkpoint.md` is the workflow's state record. The checkpoint tracks the exact phase, plan/version/approval evidence, branch, work/dependency state, gate cycles/counts, task cumulative reviews, findings, and next action. Planner-to-Coder and Coder-to-Reviewer handoffs still use the full approved plan and actual diff, not a handover summary. A new session may read a handover first, but `resume` must independently verify the checkpoint, approval, Git state, and files. A handover cannot approve a plan or skip a review. If the two conflict, stop the dependent work and resolve the discrepancy.
+
+## 9. Work items, staged tests, and review gates
+
+The same rules apply to any task domain. Planner decomposes the complete confirmed scope before approval, deeply enough that Coder does not have to guess important requirements or design choices. Each work item has a stable ID, purpose, observable result, dependencies, necessary decisions, acceptance mapping, and validation method with expected results. Small changes can have a single item; larger changes may group several items into milestones. Routine function names and internal variables do not need their own tasks.
+
+Planner selects a review schedule and explains it in the plan:
+
+| Schedule | Execution | When it is useful |
+| --- | --- | --- |
+| Concentrated | W1 and checks -> W2 and checks -> final full-task gate GF | Small or tightly coupled work where intermediate independent reviews add little value. |
+| Milestone | Ready items and checks -> milestone gate G1 -> dependent items and checks -> final gate GF | Larger work or consequential decisions where a stable intermediate outcome reduces downstream risk. |
+
+You approve the full plan once, including its work graph, verification strategy, and gates. The Orchestrator then coordinates routine items automatically. Each gate starts with its own two-review cycle; using two reviews at G1 does not spend GF's budget. The last milestone can also serve as the final gate if its scope explicitly covers the whole task, avoiding an extra duplicate review.
+
+Coder tests at useful boundaries while implementing. Every meaningful check has an input/fixture, expected result, actual result, and command or evidence reference. Staged checks can include component, interface-contract, integration, and end-to-end verification with relevant failure cases. These Coder checks do not consume Reviewer rounds. A printed OK or a successful connection alone is not sufficient evidence of correct behavior.
+
+Required failed or unavailable validation blocks affected dependents. Independent approved work can proceed when safe. Fixtures/mocks, test environments, and real integrations support different claims; the report identifies which was used. Preview or test consequential external effects before an already-authorized real action. Unrequested production deployment, publication, or external writes still need specific authorization. A bounded investigation may precede a conditional design; material decisions discovered through it return to Planner and approval before dependent implementation.
+
+Checkpoint tracks item states (PENDING, IN_PROGRESS, VERIFIED, BLOCKED, INVALIDATED) separately from gate states (PENDING, READY, PASS, BLOCKED, INVALIDATED). Item VERIFIED means its checks passed, not that Reviewer approved it. A gate PASS applies to its stable scope. If later work changes that scope or its prerequisites, invalidate affected evidence and dependent claims, preserve review history, and revalidate them. Resume inspects that evidence before skipping completed work; it does not blindly start from zero or trust an outdated PASS.
+
+For a blocked gate, the Orchestrator displays the task ID, gate ID, findings, recovery condition, and a copyable continuation request. A normal resume cannot expand that gate's budget. Older single-scope checkpoints map to one final gate with their existing counts; ambiguous multi-stage state requires clarification, never invented completion or reset history.
+
+Completion requires all necessary items/gates and current acceptance criteria, including cross-stage integration and documentation, to be satisfied at the final whole-task gate. Several local PASS verdicts do not by themselves prove the user's original goal was met.
